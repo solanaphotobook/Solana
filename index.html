@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana — Personal Travel Photo Books</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* --- LUXUS SZÍNVILÁG ÉS DESIGN ALAPOK --- */
+        :root {
+            --bg-cream: #F9F6F0;
+            --dark-brown: #180E0B; 
+            --accent-tan: #CFA983;
+            --white: #FFFFFF;
+            --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            /* FENTRŐL LEFELÉ HALADÓ LÁGY ÁTMENET */
+            background: linear-gradient(to bottom, var(--bg-cream) 0%, var(--bg-cream) 15%, var(--dark-brown) 100%);
+            color: var(--dark-brown);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        /* --- NYELVVÁLTÓ NAVIGÁCIÓ --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 0 60px 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 12px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid rgba(35, 21, 16, 0.2);
+            padding: 8px 18px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--dark-brown);
+        }
+
+        .lang-btn.active, .lang-btn:hover {
+            background-color: var(--dark-brown);
+            border-color: var(--dark-brown);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* --- HERO SZEKCIÓ --- */
+        .hero {
+            text-align: center;
+            padding: 40px 0 80px 0;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 400;
+            margin-bottom: 25px;
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            color: rgba(35, 21, 16, 0.75);
+            line-height: 1.8;
+        }
+
+        /* --- ÁRAZÁS ÉS KEDVEZMÉNYEK --- */
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 0 0 80px 0;
+        }
+
+        .price-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 45px 30px;
+            border-radius: 12px;
+            text-align: center;
+            border-top: 3px solid var(--accent-tan);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .price-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .price-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .price-card .amount {
+            font-size: 38px;
+            font-weight: 600;
+            margin: 15px 0;
+            color: var(--dark-brown);
+            letter-spacing: -1px;
+        }
+
+        /* --- ŰRLAP DIZÁJN --- */
+        .order-section {
+            background: rgba(255, 255, 255, 0.75); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.4);
+            margin-bottom: 120px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(35, 21, 16, 0.8);
+        }
+
+        input, select {
+            padding: 16px 20px;
+            border: 1px solid rgba(35, 21, 16, 0.15);
+            background-color: rgba(255, 255, 255, 0.8);
+            font-family: inherit;
+            color: var(--dark-brown);
+            font-size: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-tan);
+            background-color: var(--white);
+            box-shadow: 0 0 0 4px rgba(207, 169, 131, 0.1);
+        }
+
+        input::placeholder, select::placeholder {
+            color: rgba(35, 21, 16, 0.3);
+            font-style: italic;
+        }
+
+        /* --- DINAMIKUS KÖNYV SZEKCIÓK --- */
+        .book-bundle-container {
+            margin-top: 40px;
+        }
+
+        .book-spec-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(35, 21, 16, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            animation: fadeIn 0.5s ease forwards;
+            position: relative;
+        }
+
+        .book-spec-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 12px 0 0 12px;
+            background-color: var(--accent-tan);
+        }
+
+        .book-spec-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--dark-brown);
+        }
+
+        .form-note {
+            font-size: 13px;
+            color: rgba(35, 21, 16, 0.5);
+            margin-top: -5px;
+        }
+
+        /* --- ÉLŐ ÁR KALKULÁTOR --- */
+        .live-summary {
+            background-color: var(--dark-brown);
+            color: var(--bg-cream);
+            padding: 40px;
+            border-radius: 12px;
+            margin: 50px 0 0 0;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 300;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid rgba(249, 246, 240, 0.15);
+            padding-top: 25px;
+            margin-top: 25px;
+            font-size: 28px;
+            font-weight: 500;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .discount-highlight {
+            color: var(--accent-tan);
+            font-weight: 600;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--accent-tan);
+            color: var(--white);
+            border: none;
+            padding: 22px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-top: 25px;
+            border-radius: 8px;
+        }
+
+        .submit-btn:hover {
+            background-color: #ba8c60;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(186, 140, 96, 0.3);
+        }
+
+        /* --- PRÉMIUM 3-RUBLIKÁS SEAMLESS GALÉRIA --- */
+        .portfolio-section {
+            padding: 60px 0 100px 0;
+            text-align: center;
+        }
+
+        .portfolio-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 46px;
+            margin-bottom: 80px;
+            color: var(--bg-cream); 
+            letter-spacing: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 45px;
+            padding: 0 10px;
+        }
+
+        .gallery-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px; 
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+            aspect-ratio: 3 / 4;
+            background-color: #180E0B;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: grayscale(85%) contrast(1.1) brightness(0.9); 
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s, transform 0.8s;
+            opacity: 1;
+        }
+
+        .gallery-item:hover img {
+            filter: grayscale(0%) contrast(1) brightness(1.1);
+            transform: scale(1.06);
+        }
+
+        /* --- FOOTER --- */
+        .site-footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid rgba(249, 246, 240, 0.08); 
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(249, 246, 240, 0.6);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-links a i {
+            color: var(--accent-tan);
+            font-size: 18px;
+            transition: transform 0.4s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-links a:hover i {
+            transform: scale(1.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 44px; }
+            .order-section { padding: 40px 25px; }
+            .gallery-grid { grid-template-columns: 1fr; gap: 40px; }
+            .footer-links { gap: 30px; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">Solana</div>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('hu')">HU</button>
+                <button class="lang-btn" onclick="setLanguage('ro')">RO</button>
+                <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+            </div>
+        </header>
+
+        <section class="hero">
+            <h1 id="hero-title">Your journey, curated in a timeless frame.</h1>
+            <p id="hero-desc">Bespoke, premium, and fully personalized travel photo books designed to preserve your miles and most beautiful memories forever.</p>
+        </section>
+
+        <section class="pricing-cards">
+            <div class="price-card">
+                <h3 id="card1-title">The Solana Book</h3>
+                <div class="amount">150 RON</div>
+                <p id="card1-desc">Custom editorial layout with 48 premium photos.</p>
+            </div>
+            <div class="price-card">
+                <h3 id="card2-title">Shipping</h3>
+                <div class="amount">20 RON</div>
+                <p id="card2-desc">Flat rate. Paid only once, regardless of book quantity.</p>
+            </div>
+            <div class="price-card">
+                <h3 id="card3-title">Volume Discounts</h3>
+                <div class="amount" style="font-size: 28px; margin: 25px 0;" id="card3-amount">5% or 10% Off</div>
+                <p id="card3-desc">5% off for 3 books, 10% off for 5 or more books.</p>
+            </div>
+        </section>
+
+        <section class="order-section">
+            <h2 class="section-title" id="form-title">Secure Your Collection</h2>
+            
+            <form id="solana-order-form">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label id="lbl-name">Full Name</label>
+                        <input type="text" id="input-name" required placeholder="e.g. John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label id="lbl-email">Email Address</label>
+                        <input type="email" id="input-email" required placeholder="e.g. john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label id="lbl-phone">Phone Number</label>
+                        <input type="tel" id="input-phone" required placeholder="e.g. +40 7xx xxx xxx">
+                    </div>
+                    <div class="form-group full-width">
+                        <label id="lbl-address">Delivery Address or Easybox Location</label>
+                        <input type="text" id="input-address" required placeholder="e.g. Str. Principală Nr. 5 / Easybox">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="lbl-qty">How many books? (Max 10)</label>
+                        <select id="book-quantity" onchange="generateBookFields(); calculatePricing();">
+                            </select>
+                    </div>
+                </div>
+
+                <div id="dynamic-books-container" class="book-bundle-container"></div>
+
+                <div class="live-summary">
+                    <div class="summary-row">
+                        <span id="sum-books">Books Subtotal:</span>
+                        <span id="calc-subtotal">150 RON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span id="sum-shipping">Shipping Fee:</span>
+                        <span id="calc-shipping">20 RON</span>
+                    </div>
+                    <div class="summary-row discount-highlight" id="discount-row" style="display:none;">
+                        <span id="sum-discount">Volume Discount:</span>
+                        <span id="calc-discount">-0 RON</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span id="sum-total">Total Amount:</span>
+                        <span id="calc-total">170 RON</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="btn-submit">Continue to Payment</button>
+            </form>
+        </section>
+
+        <section class="portfolio-section">
+            <h2 id="gallery-title">Editorial Lookbook</h2>
+            <div class="gallery-grid">
+                
+                <div class="gallery-wrapper">
+                    <div class="gallery-item" id="item-0">
+                        <img id="img-0" src="" alt="Photo Book">
+                    </div>
+                </div>
+
+                <div class="gallery-wrapper">
+                    <div class="gallery-item" id="item-1">
+                        <img id="img-1" src="" alt="Photo Book">
+                    </div>
+                </div>
+
+                <div class="gallery-wrapper">
+                    <div class="gallery-item" id="item-2">
+                        <img id="img-2" src="" alt="Photo Book">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-links">
+                <a href="mailto:solana.photobook@gmail.com"><i class="fa-solid fa-envelope"></i> solana.photobook@gmail.com</a>
+                <a href="https://www.instagram.com/solana.rv?utm_source=qr" target="_blank"><i class="fa-brands fa-instagram"></i> @solanabooks</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. ADATBÁZIS BEKÖTÉS ÉS FIZETÉS (GOOGLE SHEETS & REVOLUT) 
+        // ==========================================
+        
+        // IDE ILLESZD BE A GOOGLE APPS SCRIPT WEBALKALMAZÁS LINKJÉT:
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUFIMOURKAmD89T6eLHt1vCJHocsJQN8WqJXhU2p_JU6vwhDZACIUJWHTemwifEQnX/exec";
+
+        // IDE ILLESZD BE A FIX REVOLUT LINKEKET (1-10 DB)
+        // Használhatsz Revolut Business fizetési linkeket, vagy sima revolut.me linkeket összeggel (pl. revolut.me/neved/170)
+        // A TE_NEVED részt mindenhol írd át a sajátodra!
+        const REVOLUT_LINKS = {
+            1: "https://revolut.me/ritamargaretav?currency=RON&amount=17000&note=1%20Travel%20Book", 
+            2: "https://revolut.me/ritamargaretav?currency=RON&amount=32000&note=2%20Travel%20Book", 
+            3: "https://revolut.me/ritamargaretav?currency=RON&amount=44800&note=3%20Travel%20Book", 
+            4: "https://revolut.me/ritamargaretav?currency=RON&amount=59000&note=4%20Travel%20Book", 
+            5: "https://revolut.me/ritamargaretav?currency=RON&amount=69500&note=5%20Travel%20Book", 
+            6: "https://revolut.me/ritamargaretav?currency=RON&amount=83000&note=6%20Travel%20Book",
+            7: "https://revolut.me/ritamargaretav?currency=RON&amount=96500&note=7%20Travel%20Book",
+            8: "https://revolut.me/ritamargaretav?currency=RON&amount=110000&note=8%20Travel%20Book",
+            9: "https://revolut.me/ritamargaretav?currency=RON&amount=123500&note=9%20Travel%20Book",
+            10: "https://revolut.me/ritamargaretav?currency=RON&amount=137000&note=10%20Travel%20Book"
+        };
+
+
+        document.getElementById('solana-order-form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const submitBtn = document.getElementById('btn-submit');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = "Processing order..."; 
+            submitBtn.disabled = true;
+
+            const quantity = parseInt(document.getElementById('book-quantity').value);
+
+            const payload = {
+                name: document.getElementById('input-name').value,
+                email: document.getElementById('input-email').value,
+                phone: document.getElementById('input-phone').value,
+                address: document.getElementById('input-address').value,
+                quantity: quantity,
+                total: document.getElementById('calc-total').innerText,
+                bookDetails: ""
+            };
+
+            const bookCards = document.querySelectorAll('.book-spec-card');
+            bookCards.forEach((card, index) => {
+                const inputs = card.querySelectorAll('input');
+                payload.bookDetails += `--- KÖNYV ${index + 1} ---\n`;
+                payload.bookDetails += `Cím: ${inputs[0].value}\n`;
+                payload.bookDetails += `Alcím: ${inputs[1].value}\n`;
+                payload.bookDetails += `Bottom Text: ${inputs[2].value}\n`;
+                payload.bookDetails += `Szimbólum: ${inputs[3].value}\n`;
+                payload.bookDetails += `WeTransfer: ${inputs[4].value}\n\n`;
+            });
+
+            // Küldés a Google Táblázatnak és az E-mail fióknak
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                // SIKERES MENTÉS UTÁN ÁTIRÁNYÍTÁS A MEGFELELŐ REVOLUT LINKRE
+                const correctRevolutUrl = REVOLUT_LINKS[quantity];
+                if(correctRevolutUrl) {
+                    window.location.href = correctRevolutUrl; 
+                } else {
+                    alert('Hiba: Nem található fizetési link ehhez a mennyiséghez!');
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Hiba:', error);
+                alert('Hálózati hiba történt. Kérjük próbáld újra / Network error, please try again.');
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            });
+        });
+
+
+        // ==========================================
+        // 2. SEAMLESS ÁTTŰNÉSŰ GALÉRIA LOGIKÁJA 
+        // ==========================================
+        const allGalleryImages = [
+            { src: 'https://i.postimg.cc/L6CXvY2y/vietnam.jpg' },
+            { src: 'https://i.postimg.cc/W1dC0pGG/hawaii.jpg' },
+            { src: 'https://i.postimg.cc/nrdSQNMM/Whats-App-Image-2026-06-04-at-01-31-09fdz.jpg' },
+            { src: 'https://i.postimg.cc/Gh5S30Zg/Whats-App-Image-2026-06-04-at-01-31-09ff.jpg' },
+            { src: 'https://i.postimg.cc/26G2Pgdj/Whats-App-Image-2026-06-04-at-f.jpg' },
+            { src: 'https://i.postimg.cc/5N6nR76Z/Whats-App-Image-2026-06-04-at-01-31-09.jpg' },
+            { src: 'https://i.postimg.cc/B6SCcNrY/Whats-App-Image-2026-06-04-at-01-31-08.jpg' },
+            { src: 'https://i.postimg.cc/nrdSQNMM/Whats-App-Image-2026-06-04-at-01-31-09fdz.jpg' }
+        ];
+
+        let currentImageIndices = [0, 1, 2];
+
+        function updateGallerySlot(slotIndex, newImageIndex) {
+            const item = document.getElementById(`item-${slotIndex}`);
+            const img = document.getElementById(`img-${slotIndex}`);
+            const nextSrc = allGalleryImages[newImageIndex].src;
+
+            // 1. Berakjuk az ÚJ képet a háttérbe
+            item.style.backgroundImage = `url(${nextSrc})`;
+
+            // 2. Elhalványítjuk az elülső RÉGI képet
+            img.style.opacity = '0';
+
+            // 3. Csere a háttérben
+            setTimeout(() => {
+                img.src = nextSrc;
+                img.style.transition = 'none'; 
+                img.style.opacity = '1';       
+                img.offsetHeight;              
+                img.style.transition = 'opacity 1s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s, transform 0.8s'; 
+            }, 1000); 
+        }
+
+        function rotateGallery() {
+            currentImageIndices[0] = (currentImageIndices[0] + 3) % allGalleryImages.length;
+            currentImageIndices[1] = (currentImageIndices[1] + 3) % allGalleryImages.length;
+            currentImageIndices[2] = (currentImageIndices[2] + 3) % allGalleryImages.length;
+
+            updateGallerySlot(0, currentImageIndices[0]);
+            setTimeout(() => updateGallerySlot(1, currentImageIndices[1]), 300); 
+            setTimeout(() => updateGallerySlot(2, currentImageIndices[2]), 600); 
+        }
+
+        // Kezdőképek
+        document.getElementById('img-0').src = allGalleryImages[0].src;
+        document.getElementById('img-1').src = allGalleryImages[1].src;
+        document.getElementById('img-2').src = allGalleryImages[2].src;
+
+        setInterval(rotateGallery, 4500);
+
+        // ==========================================
+        // 3. NYELVI ÉS ŰRLAP LOGIKA
+        // ==========================================
+        let currentLang = 'en';
+
+        const translations = {
+            en: {
+                heroTitle: "Your journey, curated in a timeless frame.",
+                heroDesc: "Bespoke, premium, and fully personalized travel photo books designed to preserve your miles and most beautiful memories forever.",
+                card1Title: "The Solana Book", card1Desc: "Custom editorial layout with 48 premium photos.",
+                card2Title: "Shipping", card2Desc: "Flat rate. Paid only once, regardless of book quantity.",
+                card3Title: "Volume Discounts", card3Amount: "5% or 10% Off", card3Desc: "5% off for 3 books, 10% off for 5+ books.",
+                formTitle: "Secure Your Collection",
+                lblName: "Full Name", phName: "e.g. John Doe",
+                lblEmail: "Email Address", phEmail: "e.g. john@example.com",
+                lblPhone: "Phone Number", phPhone: "e.g. +40 7xx xxx xxx",
+                lblAddress: "Delivery Address or Easybox Location", phAddress: "e.g. Str. Principală Nr. 5 / Easybox",
+                lblQty: "How many books? (Max 10)",
+                bookHeader: "Book", 
+                bookTitle: "Book Title", phBookTitle: "e.g. Summer in Italy",
+                bookSubtitle: "Subtitle (Optional)", phBookSubtitle: "e.g. The best trip ever",
+                bookBottom: "Bottom Text", phBookBottom: "e.g. August 2024",
+                bookSymbol: "Desired Symbol / Icon", phBookSymbol: "e.g. 🌴, ✈️, 🍝",
+                bookLink: "WeTransfer Link", bookNote: "Please number your 48 photos from 1 to 48 if you prefer a specific order.",
+                sumBooks: "Books Subtotal:", sumShipping: "Shipping Fee:", sumDiscount: "Volume Discount:", sumTotal: "Total Amount:",
+                btnSubmit: "Continue to Payment", galleryTitle: "Editorial Lookbook"
+            },
+            hu: {
+                heroTitle: "Az utad, egy örök stílusos keretbe zárva.",
+                heroDesc: "Egyedi, személyre szabott, prémium utazási fotókönyvek, amelyek örökre megőrzik a legszebb kalandjaidat.",
+                card1Title: "A Solana Könyv", card1Desc: "Egyedi szerkesztésű fotókönyv 48 prémium fényképpel.",
+                card2Title: "Szállítás", card2Desc: "Fix áras. Több könyv esetén is csak egyszer kell kifizetni.",
+                card3Title: "Mennyiségi Kedvezmény", card3Amount: "5% vagy 10% kedvezmény", card3Desc: "3 könyv esetén 5%, 5 vagy több könyv esetén 10% kedvezmény.",
+                formTitle: "Rendelés Leadása",
+                lblName: "Teljes Név", phName: "pl. Kovács János",
+                lblEmail: "E-mail Cím", phEmail: "pl. janos@pelda.hu",
+                lblPhone: "Telefonszám", phPhone: "pl. +40 7xx xxx xxx",
+                lblAddress: "Kiszállítási Cím vagy Easybox Automata", phAddress: "pl. Fő utca 5. / Easybox",
+                lblQty: "Hány darab könyvet szeretnél? (Max 10)",
+                bookHeader: "Könyv", 
+                bookTitle: "Könyv Címe", phBookTitle: "pl. Olaszországi nyár",
+                bookSubtitle: "Alcím (Opcionális)", phBookSubtitle: "pl. Életünk legjobb utazása",
+                bookBottom: "Könyv aljára kívánt szöveg", phBookBottom: "pl. 2024 Augusztus",
+                bookSymbol: "Kiválasztott szimbólum", phBookSymbol: "pl. 🌴, ✈️, 🍝",
+                bookLink: "WeTransfer Link a 48 képpel", bookNote: "Ha van preferált sorrend, kérjük számozd a képeket 1-től 48-ig.",
+                sumBooks: "Könyvek részösszege:", sumShipping: "Szállítási díj:", sumDiscount: "Mennyiségi kedvezmény:", sumTotal: "Fizetendő végösszeg:",
+                btnSubmit: "Rendelés Tovább a Fizetéshez", galleryTitle: "Vizuális Lookbook"
+            },
+            ro: {
+                heroTitle: "Călătoria ta, imortalizată într-un cadru atemporal.",
+                heroDesc: "Albume foto de călătorie unice, premium și complet personalizate, create pentru a-ți păstra amintirile cele mai frumoase.",
+                card1Title: "Cartea Solana", card1Desc: "Design editorial personalizat cu 48 de fotografii premium.",
+                card2Title: "Livrare", card2Desc: "Tarif fix. Se plătește o singură dată, indiferent de numărul de cărți.",
+                card3Title: "Reduceri de Volum", card3Amount: "5% sau 10% Reducere", card3Desc: "5% reducere pentru 3 cărți, 10% reducere pentru 5+ cărți.",
+                formTitle: "Securizează-ți Colecția",
+                lblName: "Nume Complet", phName: "ex. Ion Popescu",
+                lblEmail: "Adresă E-mail", phEmail: "ex. ion@exemplu.ro",
+                lblPhone: "Număr de Telefon", phPhone: "ex. +40 7xx xxx xxx",
+                lblAddress: "Adresă de Livrare sau Locație Easybox", phAddress: "ex. Str. Principală Nr. 5 / Easybox",
+                lblQty: "Câte cărți dorești? (Max 10)",
+                bookHeader: "Carte", 
+                bookTitle: "Titlul Cărții", phBookTitle: "ex. Vara în Italia",
+                bookSubtitle: "Subtitlu (Opțional)", phBookSubtitle: "ex. Cea mai frumoasă excursie",
+                bookBottom: "Text în partea de jos", phBookBottom: "ex. August 2024",
+                bookSymbol: "Simbol dorit / Pictogramă", phBookSymbol: "ex. 🌴, ✈️, 🍝",
+                bookLink: "Link WeTransfer", bookNote: "Te rugăm să numerotezi fotografiile de la 1 la 48 dacă preferi o ordine specifică.",
+                sumBooks: "Subtotal Cărți:", sumShipping: "Taxă de Livrare:", sumDiscount: "Reducere de Volum:", sumTotal: "Total de Plată:",
+                btnSubmit: "Spre Plată", galleryTitle: "Lookbook Editorial"
+            },
+            de: {
+                heroTitle: "Deine Reise, festgehalten in einem zeitlosen Rahmen.",
+                heroDesc: "Exklusive, maßgeschneiderte Reisefotobücher, die Ihre wertvollsten Erinnerungen für immer bewahren.",
+                card1Title: "Das Solana Buch", card1Desc: "Individuelles Layout mit 48 Premium-Fotos.",
+                card2Title: "Versand", card2Desc: "Pauschale. Wird nur einmal pro Bestellung berechnet.",
+                card3Title: "Mengenrabatt", card3Amount: "5% oder 10% Rabatt", card3Desc: "5% Rabatt ab 3 Büchern, 10% Rabatt ab 5 Büchern.",
+                formTitle: "Sichern Sie sich Ihre Sammlung",
+                lblName: "Vollständiger Name", phName: "z.B. Max Mustermann",
+                lblEmail: "E-Mail-Adresse", phEmail: "z.B. max@beispiel.de",
+                lblPhone: "Telefonnummer", phPhone: "z.B. +40 7xx xxx xxx",
+                lblAddress: "Lieferadresse oder Easybox-Standort", phAddress: "z.B. Hauptstraße 5 / Easybox",
+                lblQty: "Wie viele Bücher möchten Sie? (Max 10)",
+                bookHeader: "Buch", 
+                bookTitle: "Buchtitel", phBookTitle: "z.B. Sommer in Italien",
+                bookSubtitle: "Untertitel (Optional)", phBookSubtitle: "z.B. Die beste Reise",
+                bookBottom: "Text unten", phBookBottom: "z.B. August 2024",
+                bookSymbol: "Wunschsymbol / Icon", phBookSymbol: "z.B. 🌴, ✈️, 🍝",
+                bookLink: "WeTransfer-Link", bookNote: "Bitte nummerieren Sie die Fotos von 1 bis 48, wenn Sie eine bestimmte Reihenfolge wünschen.",
+                sumBooks: "Zwischensumme Bücher:", sumShipping: "Versandkosten:", sumDiscount: "Mengenrabatt:", sumTotal: "Gesamtsumme:",
+                btnSubmit: "Weiter zur Zahlung", galleryTitle: "Visuelles Lookbook"
+            }
+        };
+
+        const qtySelect = document.getElementById('book-quantity');
+        // MAX 10 KÖNYV BEÁLLÍTÁSA A CIKLUSBAN
+        for (let i = 1; i <= 10; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = i;
+            qtySelect.appendChild(opt);
+        }
+
+        function generateBookFields() {
+            const qty = parseInt(qtySelect.value);
+            const container = document.getElementById('dynamic-books-container');
+            container.innerHTML = ''; 
+
+            const t = translations[currentLang];
+
+            for (let i = 1; i <= qty; i++) {
+                const card = document.createElement('div');
+                card.className = 'book-spec-card';
+                card.innerHTML = `
+                    <h4>#${i} ${t.bookHeader}</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>${t.bookTitle} *</label>
+                            <input type="text" required placeholder="${t.phBookTitle}">
+                        </div>
+                        <div class="form-group">
+                            <label>${t.bookSubtitle}</label>
+                            <input type="text" placeholder="${t.phBookSubtitle}">
+                        </div>
+                        <div class="form-group">
+                            <label>${t.bookBottom}</label>
+                            <input type="text" placeholder="${t.phBookBottom}">
+                        </div>
+                        <div class="form-group">
+                            <label>${t.bookSymbol}</label>
+                            <input type="text" placeholder="${t.phBookSymbol}">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>${t.bookLink} *</label>
+                            <input type="url" required placeholder="https://wetransfer.com/...">
+                            <span class="form-note">${t.bookNote}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function calculatePricing() {
+            const qty = parseInt(qtySelect.value) || 1;
+            const basePricePerBook = 150;
+            const shippingFee = 20;
+            
+            let subtotal = qty * basePricePerBook;
+            let discountPercent = 0;
+
+            if (qty >= 5) {
+                discountPercent = 0.10;
+            } else if (qty >= 3) {
+                discountPercent = 0.05;
+            }
+
+            let discountAmount = subtotal * discountPercent;
+            let total = subtotal + shippingFee - discountAmount;
+
+            document.getElementById('calc-subtotal').innerText = `${subtotal} RON`;
+            document.getElementById('calc-shipping').innerText = `${shippingFee} RON`;
+            
+            const discountRow = document.getElementById('discount-row');
+            if (discountAmount > 0) {
+                discountRow.style.display = 'flex';
+                // Kerekítés nélkül mutatja a kedvezményt, hogy ne legyen tört szám
+                document.getElementById('calc-discount').innerText = `-${discountAmount.toFixed(1).replace('.0', '')} RON (${discountPercent * 100}%)`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+            
+            document.getElementById('calc-total').innerText = `${total.toFixed(0)} RON`;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText.toLowerCase() === lang) btn.classList.add('active');
+                if(lang === 'hu' && btn.innerText === 'HU') btn.classList.add('active');
+            });
+
+            const t = translations[lang];
+
+            document.getElementById('hero-title').innerText = t.heroTitle;
+            document.getElementById('hero-desc').innerText = t.heroDesc;
+            
+            document.getElementById('card1-title').innerText = t.card1Title;
+            document.getElementById('card1-desc').innerText = t.card1Desc;
+            document.getElementById('card2-title').innerText = t.card2Title;
+            document.getElementById('card2-desc').innerText = t.card2Desc;
+            document.getElementById('card3-title').innerText = t.card3Title;
+            document.getElementById('card3-amount').innerText = t.card3Amount;
+            document.getElementById('card3-desc').innerText = t.card3Desc;
+            
+            document.getElementById('form-title').innerText = t.formTitle;
+            document.getElementById('lbl-name').innerText = t.lblName;
+            document.getElementById('lbl-email').innerText = t.lblEmail;
+            document.getElementById('lbl-phone').innerText = t.lblPhone;
+            document.getElementById('lbl-address').innerText = t.lblAddress;
+            document.getElementById('lbl-qty').innerText = t.lblQty;
+            
+            document.getElementById('input-name').placeholder = t.phName;
+            document.getElementById('input-email').placeholder = t.phEmail;
+            document.getElementById('input-phone').placeholder = t.phPhone;
+            document.getElementById('input-address').placeholder = t.phAddress;
+
+            document.getElementById('sum-books').innerText = t.sumBooks;
+            document.getElementById('sum-shipping').innerText = t.sumShipping;
+            document.getElementById('sum-discount').innerText = t.sumDiscount;
+            document.getElementById('sum-total').innerText = t.sumTotal;
+            document.getElementById('btn-submit').innerText = t.btnSubmit;
+            document.getElementById('gallery-title').innerText = t.galleryTitle;
+
+            generateBookFields();
+            calculatePricing();
+        }
+
+        generateBookFields();
+        calculatePricing();
+    </script>
+</body>
+</html>
