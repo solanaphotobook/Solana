@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Solana — Personal Travel Photo Books</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,6 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            /* FENTRŐL LEFELÉ HALADÓ LÁGY ÁTMENET */
             background: linear-gradient(to bottom, var(--bg-cream) 0%, var(--bg-cream) 15%, var(--dark-brown) 100%);
             color: var(--dark-brown);
             line-height: 1.7;
@@ -41,52 +40,98 @@
             padding: 20px 30px;
         }
 
-        /* --- NYELVVÁLTÓ NAVIGÁCIÓ --- */
+        /* --- NYELVVÁLTÓ NAVIGÁCIÓ (MODERN DROPDOWN) --- */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 40px 0 60px 0;
+            padding: 30px 0 50px 0;
         }
 
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 600;
             letter-spacing: 4px;
             text-transform: uppercase;
         }
 
-        .lang-switcher {
-            display: flex;
-            gap: 12px;
+        .lang-dropdown {
+            position: relative;
         }
 
-        .lang-btn {
+        .lang-toggle {
             background: transparent;
             border: 1px solid rgba(35, 21, 16, 0.2);
-            padding: 8px 18px;
+            padding: 10px 16px;
             font-family: inherit;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             letter-spacing: 1px;
             cursor: pointer;
             border-radius: 30px;
+            transition: all 0.3s ease;
+            color: var(--dark-brown);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-toggle:hover {
+            background-color: rgba(35, 21, 16, 0.05);
+        }
+
+        .lang-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .lang-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 15px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
             color: var(--dark-brown);
         }
 
         .lang-btn.active, .lang-btn:hover {
             background-color: var(--dark-brown);
-            border-color: var(--dark-brown);
             color: var(--white);
-            transform: translateY(-2px);
         }
 
         /* --- HERO SZEKCIÓ --- */
         .hero {
             text-align: center;
-            padding: 40px 0 80px 0;
+            padding: 20px 0 80px 0;
         }
 
         .hero h1 {
@@ -110,7 +155,7 @@
         /* --- ÁRAZÁS ÉS KEDVEZMÉNYEK --- */
         .pricing-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
             margin: 0 0 80px 0;
         }
@@ -198,6 +243,7 @@
             font-size: 15px;
             border-radius: 8px;
             transition: all 0.3s ease;
+            width: 100%;
         }
 
         input:focus, select:focus {
@@ -308,7 +354,7 @@
             box-shadow: 0 15px 25px rgba(186, 140, 96, 0.3);
         }
 
-        /* --- PRÉMIUM 3-RUBLIKÁS SEAMLESS GALÉRIA --- */
+        /* --- PRÉMIUM 3-RUBLIKÁS SEAMLESS GALÉRIA JAVÍTVA --- */
         .portfolio-section {
             padding: 60px 0 100px 0;
             text-align: center;
@@ -324,7 +370,7 @@
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 45px;
             padding: 0 10px;
         }
@@ -342,12 +388,25 @@
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
             aspect-ratio: 3 / 4;
             background-color: #180E0B;
-            background-size: cover;
-            background-position: center;
             cursor: pointer;
         }
 
+        /* A háttérkép konténere CSS változóval */
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: var(--bg-next);
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(85%) contrast(1.1) brightness(0.9);
+            transition: filter 0.8s, transform 0.8s;
+            z-index: 1;
+        }
+
         .gallery-item img {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -355,8 +414,11 @@
             filter: grayscale(85%) contrast(1.1) brightness(0.9); 
             transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s, transform 0.8s;
             opacity: 1;
+            z-index: 2; /* Ez az eredeti kép, ez van legfelül */
         }
 
+        /* Ha ráhúzzuk az egeret, mindkét kép (fő kép és a háttérben lévő cserekép is) színeződik */
+        .gallery-item:hover::before,
         .gallery-item:hover img {
             filter: grayscale(0%) contrast(1) brightness(1.1);
             transform: scale(1.06);
@@ -408,11 +470,35 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- MOBIL OPTIMALIZÁCIÓ (Tablet és alatta) --- */
         @media (max-width: 900px) {
             .hero h1 { font-size: 44px; }
             .order-section { padding: 40px 25px; }
             .gallery-grid { grid-template-columns: 1fr; gap: 40px; }
             .footer-links { gap: 30px; flex-direction: column; }
+        }
+
+        /* --- TELEFON OPTIMALIZÁCIÓ (Extra kicsi képernyők) --- */
+        @media (max-width: 600px) {
+            .container { padding: 15px 20px; }
+            header { padding: 20px 0 30px 0; }
+            .logo { font-size: 26px; }
+            .hero { padding: 10px 0 50px 0; }
+            .hero h1 { font-size: 34px; margin-bottom: 15px; }
+            .hero p { font-size: 15px; }
+            .pricing-cards { grid-template-columns: 1fr; gap: 20px; margin-bottom: 60px; }
+            .price-card { padding: 30px 20px; }
+            .order-section { padding: 30px 20px; margin-bottom: 80px; border-radius: 16px; }
+            .section-title { font-size: 28px; margin-bottom: 30px; }
+            .form-grid { gap: 20px; }
+            .book-spec-card { padding: 25px 15px; margin-bottom: 20px; }
+            .book-spec-card h4 { font-size: 20px; margin-bottom: 15px; }
+            .live-summary { padding: 25px 20px; margin-top: 30px; }
+            .summary-row { font-size: 14px; }
+            .summary-row.total { font-size: 22px; padding-top: 15px; margin-top: 15px; }
+            .submit-btn { padding: 18px; font-size: 13px; }
+            .portfolio-section { padding: 30px 0 60px 0; }
+            .portfolio-section h2 { font-size: 34px; margin-bottom: 40px; }
         }
     </style>
 </head>
@@ -421,11 +507,16 @@
     <div class="container">
         <header>
             <div class="logo">Solana</div>
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('hu')">HU</button>
-                <button class="lang-btn" onclick="setLanguage('ro')">RO</button>
-                <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+            <div class="lang-dropdown">
+                <button class="lang-toggle" onclick="toggleLangMenu()">
+                    <i class="fa-solid fa-globe"></i> <span id="current-lang-display">EN</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </button>
+                <div class="lang-menu" id="lang-menu">
+                    <button class="lang-btn active" onclick="setLanguage('en')">English</button>
+                    <button class="lang-btn" onclick="setLanguage('hu')">Magyar</button>
+                    <button class="lang-btn" onclick="setLanguage('ro')">Română</button>
+                    <button class="lang-btn" onclick="setLanguage('de')">Deutsch</button>
+                </div>
             </div>
         </header>
 
@@ -543,15 +634,24 @@
 
     <script>
         // ==========================================
-        // 1. ADATBÁZIS BEKÖTÉS ÉS FIZETÉS (GOOGLE SHEETS & REVOLUT) 
+        // 1. DROPDOWN MENÜ LOGIKA
         // ==========================================
-        
-        // IDE ILLESZD BE A GOOGLE APPS SCRIPT WEBALKALMAZÁS LINKJÉT:
+        function toggleLangMenu() {
+            document.getElementById('lang-menu').classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.lang-dropdown');
+            if (!dropdown.contains(event.target)) {
+                document.getElementById('lang-menu').classList.remove('show');
+            }
+        });
+
+        // ==========================================
+        // 2. ADATBÁZIS BEKÖTÉS ÉS FIZETÉS 
+        // ==========================================
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUFIMOURKAmD89T6eLHt1vCJHocsJQN8WqJXhU2p_JU6vwhDZACIUJWHTemwifEQnX/exec";
 
-        // IDE ILLESZD BE A FIX REVOLUT LINKEKET (1-10 DB)
-        // Használhatsz Revolut Business fizetési linkeket, vagy sima revolut.me linkeket összeggel (pl. revolut.me/neved/170)
-        // A TE_NEVED részt mindenhol írd át a sajátodra!
         const REVOLUT_LINKS = {
             1: "https://revolut.me/ritamargaretav?currency=RON&amount=17000&note=1%20Travel%20Book", 
             2: "https://revolut.me/ritamargaretav?currency=RON&amount=32000&note=2%20Travel%20Book", 
@@ -564,7 +664,6 @@
             9: "https://revolut.me/ritamargaretav?currency=RON&amount=123500&note=9%20Travel%20Book",
             10: "https://revolut.me/ritamargaretav?currency=RON&amount=137000&note=10%20Travel%20Book"
         };
-
 
         document.getElementById('solana-order-form').addEventListener('submit', function(event) {
             event.preventDefault(); 
@@ -597,7 +696,6 @@
                 payload.bookDetails += `WeTransfer: ${inputs[4].value}\n\n`;
             });
 
-            // Küldés a Google Táblázatnak és az E-mail fióknak
             fetch(WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -607,7 +705,6 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                // SIKERES MENTÉS UTÁN ÁTIRÁNYÍTÁS A MEGFELELŐ REVOLUT LINKRE
                 const correctRevolutUrl = REVOLUT_LINKS[quantity];
                 if(correctRevolutUrl) {
                     window.location.href = correctRevolutUrl; 
@@ -625,13 +722,12 @@
             });
         });
 
-
         // ==========================================
-        // 2. SEAMLESS ÁTTŰNÉSŰ GALÉRIA LOGIKÁJA 
+        // 3. SEAMLESS ÁTTŰNÉSŰ GALÉRIA LOGIKÁJA (JAVÍTVA)
         // ==========================================
         const allGalleryImages = [
-            { src: 'https://i.postimg.cc/L6CXvY2y/vietnam.jpg' },
-            { src: 'https://i.postimg.cc/W1dC0pGG/hawaii.jpg' },
+            { src: 'https://i.postimg.cc/5N6nR76Z/Whats-App-Image-2026-06-04-at-01-31-09.jpg' },
+            { src: 'https://i.postimg.cc/Gh5S30Zg/Whats-App-Image-2026-06-04-at-01-31-09ff.jpg' },
             { src: 'https://i.postimg.cc/nrdSQNMM/Whats-App-Image-2026-06-04-at-01-31-09fdz.jpg' },
             { src: 'https://i.postimg.cc/Gh5S30Zg/Whats-App-Image-2026-06-04-at-01-31-09ff.jpg' },
             { src: 'https://i.postimg.cc/26G2Pgdj/Whats-App-Image-2026-06-04-at-f.jpg' },
@@ -647,14 +743,14 @@
             const img = document.getElementById(`img-${slotIndex}`);
             const nextSrc = allGalleryImages[newImageIndex].src;
 
-            // 1. Berakjuk az ÚJ képet a háttérbe
-            item.style.backgroundImage = `url(${nextSrc})`;
-
-            // 2. Elhalványítjuk az elülső RÉGI képet
+            // ÚJ MEGOLDÁS: A CSS változón keresztül adjuk át az új képet a ::before elemnek
+            item.style.setProperty('--bg-next', `url(${nextSrc})`);
+            
+            // Halványítjuk a fő képet
             img.style.opacity = '0';
 
-            // 3. Csere a háttérben
             setTimeout(() => {
+                // Csere a forrásban, és hirtelen visszahozzuk 100% opacity-re az elülső képet
                 img.src = nextSrc;
                 img.style.transition = 'none'; 
                 img.style.opacity = '1';       
@@ -673,15 +769,13 @@
             setTimeout(() => updateGallerySlot(2, currentImageIndices[2]), 600); 
         }
 
-        // Kezdőképek
         document.getElementById('img-0').src = allGalleryImages[0].src;
         document.getElementById('img-1').src = allGalleryImages[1].src;
         document.getElementById('img-2').src = allGalleryImages[2].src;
-
         setInterval(rotateGallery, 4500);
 
         // ==========================================
-        // 3. NYELVI ÉS ŰRLAP LOGIKA
+        // 4. NYELVI ÉS ŰRLAP LOGIKA
         // ==========================================
         let currentLang = 'en';
 
@@ -732,7 +826,7 @@
                 heroTitle: "Călătoria ta, imortalizată într-un cadru atemporal.",
                 heroDesc: "Albume foto de călătorie unice, premium și complet personalizate, create pentru a-ți păstra amintirile cele mai frumoase.",
                 card1Title: "Cartea Solana", card1Desc: "Design editorial personalizat cu 48 de fotografii premium.",
-                card2Title: "Livrare", card2Desc: "Tarif fix. Se plătește o singură dată, indiferent de numărul de cărți.",
+                card2Title: "Livrare", card2Desc: "Tarif fix. Se plătește o single dată, indiferent de numărul de cărți.",
                 card3Title: "Reduceri de Volum", card3Amount: "5% sau 10% Reducere", card3Desc: "5% reducere pentru 3 cărți, 10% reducere pentru 5+ cărți.",
                 formTitle: "Securizează-ți Colecția",
                 lblName: "Nume Complet", phName: "ex. Ion Popescu",
@@ -773,7 +867,6 @@
         };
 
         const qtySelect = document.getElementById('book-quantity');
-        // MAX 10 KÖNYV BEÁLLÍTÁSA A CIKLUSBAN
         for (let i = 1; i <= 10; i++) {
             let opt = document.createElement('option');
             opt.value = i;
@@ -844,7 +937,6 @@
             const discountRow = document.getElementById('discount-row');
             if (discountAmount > 0) {
                 discountRow.style.display = 'flex';
-                // Kerekítés nélkül mutatja a kedvezményt, hogy ne legyen tört szám
                 document.getElementById('calc-discount').innerText = `-${discountAmount.toFixed(1).replace('.0', '')} RON (${discountPercent * 100}%)`;
             } else {
                 discountRow.style.display = 'none';
@@ -856,10 +948,12 @@
         function setLanguage(lang) {
             currentLang = lang;
             
+            document.getElementById('current-lang-display').innerText = lang.toUpperCase();
+            document.getElementById('lang-menu').classList.remove('show');
+            
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if(btn.innerText.toLowerCase() === lang) btn.classList.add('active');
-                if(lang === 'hu' && btn.innerText === 'HU') btn.classList.add('active');
+                if(btn.getAttribute('onclick').includes(`'${lang}'`)) btn.classList.add('active');
             });
 
             const t = translations[lang];
